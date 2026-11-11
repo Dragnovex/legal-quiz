@@ -1,0 +1,311 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<style>:root{color-scheme:light}body{margin:0}[hidden]{display:none!important}img{max-width:100%}</style>
+<script>document.documentElement.dir="rtl";document.documentElement.lang="ar";</script>
+<title>اختبار العطلة القضائية</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Almarai:wght@400;700;800&display=swap" rel="stylesheet">
+<style>
+  /* Layout: one column, one question per screen; brand green card for headline moments, plain sheets for answering. */
+  :root{
+    --bg:#f6f4ef; --bg-2:#ebe7dd; --card:#ffffff; --line:#e3ddd0;
+    --ink:#1c2422; --ink-2:#4d5653; --ink-3:#7a827f;
+    --brand:#1d3a32; --brand-ink:#f2eee5; --brand-soft:#c9d3cd;
+    --gold:#ad8742; --gold-ink:#ffffff;
+    --right:#1d3a32; --right-bg:#e4ebe6; --right-line:#9fb4a8;
+    --wrong:#8c5a3c; --wrong-bg:#f3e9e1; --wrong-line:#d8bfae;
+    --font:"Almarai", "Segoe UI", Tahoma, sans-serif;
+    --r:14px; --ease:cubic-bezier(.2,.7,.2,1);
+    direction:rtl;
+  }
+  @media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){
+    --bg:#111a17; --bg-2:#1f2b27; --card:#17221e; --line:#2a3833;
+    --ink:#e7ece9; --ink-2:#b3beb9; --ink-3:#86928d;
+    --brand:#1f3c33; --brand-ink:#eef0ea; --brand-soft:#a9bbb1;
+    --gold:#c9a25d; --gold-ink:#1a1408;
+    --right:#9fd0b4; --right-bg:#18302a; --right-line:#2f5446;
+    --wrong:#e2a585; --wrong-bg:#33231b; --wrong-line:#5a3d2e;
+    color-scheme:dark; } }
+  :root[data-theme="dark"]{
+    --bg:#111a17; --bg-2:#1f2b27; --card:#17221e; --line:#2a3833;
+    --ink:#e7ece9; --ink-2:#b3beb9; --ink-3:#86928d;
+    --brand:#1f3c33; --brand-ink:#eef0ea; --brand-soft:#a9bbb1;
+    --gold:#c9a25d; --gold-ink:#1a1408;
+    --right:#9fd0b4; --right-bg:#18302a; --right-line:#2f5446;
+    --wrong:#e2a585; --wrong-bg:#33231b; --wrong-line:#5a3d2e;
+    color-scheme:dark; }
+
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+  html,body{overflow-x:clip}
+  body{background:var(--bg);color:var(--ink);font-family:var(--font);font-size:15px}
+  button{font:inherit;color:inherit;cursor:pointer}
+  :focus-visible{outline:2px solid var(--gold);outline-offset:3px}
+  .app{width:100%;max-width:520px;margin:0 auto;min-height:100dvh;display:flex;flex-direction:column;
+       padding-block:18px 24px;padding-left:max(16px, env(safe-area-inset-left, 0px));padding-right:max(16px, env(safe-area-inset-right, 0px))}
+
+  .top{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;min-height:28px}
+  .name{font-size:13px;color:var(--ink-2)}
+  .name b{color:var(--ink)}
+  .count{font-size:13px;color:var(--ink-3);font-variant-numeric:tabular-nums}
+  .count b{color:var(--ink)}
+  .bar{height:5px;background:var(--bg-2);border-radius:5px;overflow:hidden;margin-bottom:22px}
+  .bar span{display:block;height:100%;background:var(--gold);transform-origin:right;transform:scaleX(0);transition:transform .45s var(--ease)}
+
+  /* start */
+  .hero{flex:1;display:flex;flex-direction:column;justify-content:center;gap:14px}
+  .hero .card{background:var(--brand);color:var(--brand-ink);border-radius:18px;padding:28px 22px}
+  .hero h1{font-size:28px;line-height:1.45;margin:0 0 10px;font-weight:800;text-wrap:balance}
+  .hero p{margin:0;color:var(--brand-soft);line-height:1.85;font-size:15px}
+  .meta{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+  .meta div{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px 8px;text-align:center}
+  .meta b{display:block;font-size:20px;color:var(--ink);font-variant-numeric:tabular-nums}
+  .meta span{font-size:12px;color:var(--ink-3)}
+
+  /* question */
+  .q{flex:1;display:flex;flex-direction:column}
+  .q h2{font-size:20px;line-height:1.65;margin:0 0 18px;font-weight:800;text-wrap:balance}
+  .opts{display:flex;flex-direction:column;gap:10px;margin:0;padding:0;list-style:none}
+  .opt{display:flex;align-items:center;gap:12px;width:100%;text-align:right;background:var(--card);border:1.5px solid var(--line);border-radius:var(--r);padding:14px;font-size:15.5px;line-height:1.6;transition:border-color .15s var(--ease),background-color .15s var(--ease),transform .1s var(--ease),opacity .2s}
+  .opt .k{flex:0 0 30px;height:30px;border-radius:9px;background:var(--bg);display:grid;place-items:center;font-weight:700;font-size:13px;color:var(--ink-3);transition:background-color .15s,color .15s}
+  .opt:hover:not([disabled]){border-color:var(--ink-3)}
+  .opt:active:not([disabled]){transform:scale(.99)}
+  .opt[aria-checked="true"]{border-color:var(--brand)}
+  .opt[aria-checked="true"] .k{background:var(--brand);color:var(--brand-ink)}
+  .opt[disabled]{cursor:default}
+  .opt.is-right{border-color:var(--right-line);background:var(--right-bg)}
+  .opt.is-right .k{background:var(--right);color:var(--card)}
+  .opt.is-wrong{border-color:var(--wrong-line);background:var(--wrong-bg)}
+  .opt.is-wrong .k{background:var(--wrong);color:var(--card)}
+  .opt.is-dim{opacity:.5}
+
+  .fb{margin-top:16px;border-radius:var(--r);padding:14px 16px;font-size:14.5px;line-height:1.85;border:1px solid}
+  .fb.right{background:var(--right-bg);border-color:var(--right-line)}
+  .fb.wrong{background:var(--wrong-bg);border-color:var(--wrong-line)}
+  .fb h3{margin:0 0 4px;font-size:15px}
+  .fb.right h3{color:var(--right)} .fb.wrong h3{color:var(--wrong)}
+  .fb .src{display:block;margin-top:8px;padding-top:8px;border-top:1px solid var(--line);font-size:13px;color:var(--ink-2)}
+  .fb .src b{color:var(--ink)}
+  .in{animation:in .3s var(--ease) both}
+  @keyframes in{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+
+  .cta{margin-top:auto;padding-top:18px}
+  .btn{width:100%;border:0;border-radius:var(--r);padding:15px;font-size:16px;font-weight:700;background:var(--brand);color:var(--brand-ink);transition:opacity .15s,transform .1s var(--ease)}
+  .btn:active:not([disabled]){transform:scale(.99)}
+  .btn.gold{background:var(--gold);color:var(--gold-ink)}
+  .btn.line{background:transparent;color:var(--ink);box-shadow:inset 0 0 0 1.5px var(--line)}
+  .btn[disabled]{opacity:.35;cursor:default}
+
+  /* result */
+  .res{flex:1;display:flex;flex-direction:column;gap:14px}
+  .score{background:var(--brand);color:var(--brand-ink);border-radius:18px;padding:24px 20px;text-align:center}
+  .ring{width:128px;height:128px;margin:4px auto 12px;position:relative}
+  .ring svg{transform:rotate(-90deg);display:block}
+  .ring .arc{transition:stroke-dashoffset 1s var(--ease)}
+  .ring output{position:absolute;inset:0;display:grid;place-items:center;font-size:30px;font-weight:800;font-variant-numeric:tabular-nums}
+  .score h2{margin:0 0 4px;font-size:22px;color:var(--gold)}
+  .score p{margin:0;color:var(--brand-soft);font-size:14px;line-height:1.8}
+  .stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+  .stats div{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:10px;text-align:center}
+  .stats b{display:block;font-size:20px;font-variant-numeric:tabular-nums}
+  .stats span{font-size:12px;color:var(--ink-3)}
+  .rev h3{font-size:15px;margin:4px 0 6px}
+  .rev ol{list-style:none;margin:0;padding:0;background:var(--card);border:1px solid var(--line);border-radius:var(--r)}
+  .rev li{display:flex;gap:10px;padding:11px 14px;font-size:14px;line-height:1.7}
+  .rev li + li{border-top:1px solid var(--line)}
+  .rev .s{flex:0 0 22px;height:22px;border-radius:50%;display:grid;place-items:center;font-size:12px;margin-top:2px;color:var(--card)}
+  .rev .right .s{background:var(--right)} .rev .wrong .s{background:var(--wrong)}
+  .rev small{display:block;color:var(--ink-3);font-size:12.5px}
+  .row{display:flex;gap:10px}
+  .note{font-size:11.5px;color:var(--ink-3);text-align:center;line-height:1.7;margin:4px 0 0}
+  @media (prefers-reduced-motion: reduce){ *,*::before,*::after{animation:none!important;transition:none!important} }
+</style>
+
+</head>
+<body>
+<main class="app">
+  <div class="top">
+    <span class="name"><b>اختبار</b> المعرفة القانونية</span>
+    <span class="count" id="count" hidden>سؤال <b id="qn">1</b> من <b id="qt">10</b></span>
+  </div>
+  <div class="bar" id="bar" hidden><span id="barFill"></span></div>
+
+  <section class="hero" id="start">
+    <div class="card">
+      <h1>العطلة القضائية حول العالم</h1>
+      <p>أسئلة عن مدة العطلة القضائية وتوقيتها وسندها النظامي في عدد من الدول. بعد كل إجابة يظهر التصحيح والسند، وفي النهاية تقييمك.</p>
+    </div>
+    <div class="meta">
+      <div><b id="mQ">10</b><span>أسئلة</span></div>
+      <div><b>8</b><span>دول</span></div>
+      <div><b>7</b><span>أنظمة ولوائح</span></div>
+    </div>
+    <div class="cta"><button class="btn gold" id="go">ابدأ الاختبار</button></div>
+  </section>
+
+  <section class="q" id="quiz" hidden>
+    <div id="qbox">
+      <h2 id="qText"></h2>
+      <ul class="opts" id="opts" role="radiogroup" aria-labelledby="qText"></ul>
+      <div class="fb" id="fb" hidden role="status" aria-live="polite"></div>
+    </div>
+    <div class="cta"><button class="btn" id="next" disabled>تحقق من الإجابة</button></div>
+  </section>
+
+  <section class="res" id="result" hidden>
+    <div class="score">
+      <div class="ring">
+        <svg width="128" height="128" viewBox="0 0 128 128" aria-hidden="true">
+          <circle cx="64" cy="64" r="55" fill="none" stroke="var(--brand-soft)" stroke-opacity=".2" stroke-width="10"/>
+          <circle class="arc" id="arc" cx="64" cy="64" r="55" fill="none" stroke="var(--gold)" stroke-width="10" stroke-linecap="round" stroke-dasharray="345.6" stroke-dashoffset="345.6"/>
+        </svg>
+        <output id="pct">0%</output>
+      </div>
+      <h2 id="level"></h2>
+      <p id="levelMsg"></p>
+    </div>
+    <div class="stats">
+      <div><b id="sOk">0</b><span>إجابات صحيحة</span></div>
+      <div><b id="sBad">0</b><span>إجابات خاطئة</span></div>
+      <div><b id="sTime">0:00</b><span>الوقت</span></div>
+    </div>
+    <div class="rev"><h3>مراجعة إجاباتك</h3><ol id="review"></ol></div>
+    <div class="row"><button class="btn gold" id="again">إعادة الاختبار</button><button class="btn line" id="wrongOnly">الأخطاء فقط</button></div>
+    <p class="note">المعلومات مقارنة عامة لأغراض التوعية، وقد يختلف التطبيق بحسب كل محكمة.</p>
+  </section>
+</main>
+
+<script>
+// الأسئلة مبنية على ملف «العطلة القضائية حول العالم».
+const BANK = [
+  {q:"كم مدة العطلة القضائية لقضاة ديوان المظالم في المملكة؟",
+   o:["30 يوماً","45 يوماً","60 يوماً","90 يوماً"], a:1,
+   e:"45 يوماً بأجر كامل شاملاً البدلات، ولم تُحدَّد لها فترة ثابتة.",
+   s:"لائحة شؤون القضاة الوظيفية، وفق ما استعرضه ديوان المظالم بتاريخ 21 أكتوبر 2026."},
+  {q:"متى تكون العطلة القضائية في مصر؟",
+   o:["1 يوليو إلى 30 سبتمبر","1 إلى 31 أغسطس","16 يوليو إلى 15 سبتمبر","يناير من كل عام"], a:0,
+   e:"تبدأ من أول يوليو وتنتهي آخر سبتمبر.",
+   s:"المادتان (86) و(87) من قانون السلطة القضائية رقم 46 لسنة 1972."},
+  {q:"في مصر، ما الحد الأقصى لإجازة القضاة خلال العطلة القضائية؟",
+   o:["شهر واحد","شهر ونصف","شهران","ثلاثة أشهر"], a:2,
+   e:"شهران كحد أقصى للقضاة، وشهر ونصف لغيرهم.",
+   s:"المادتان (86) و(87) من قانون السلطة القضائية رقم 46 لسنة 1972."},
+  {q:"صح أم خطأ: خلال العطلة القضائية في مصر تتوقف المحاكم عن نظر جميع القضايا.",
+   o:["صح","خطأ"], a:1, fixed:true,
+   e:"خطأ. تستمر المحاكم في نظر القضايا المستعجلة خلال العطلة.",
+   s:"قانون السلطة القضائية رقم 46 لسنة 1972."},
+  {q:"كيف تُنظَّم العطلة القضائية في سوريا لعام 2026؟",
+   o:["شهران متصلان لجميع القضاة","شهر أغسطس مقسّماً على مجموعتين بالتناوب","15 يوماً في يوليو","لا توجد عطلة قضائية"], a:1,
+   e:"شهر أغسطس (آب)، مقسّماً على مجموعتين من القضاة بالتناوب، مع استمرار نظر القضايا المستعجلة.",
+   s:"قرار وزارة العدل رقم (1477) بتنظيم العطلة القضائية لعام 2026."},
+  {q:"في إيطاليا، ماذا تعني العطلة القضائية في أغسطس؟",
+   o:["إغلاق المحاكم بالكامل","وقف المواعيد الإجرائية","عطلة للمحامين فقط","تأجيل جميع الأحكام لسنة"], a:1,
+   e:"تعني وقف سريان المواعيد الإجرائية من 1 إلى 31 أغسطس، ولا يعني ذلك إغلاق المحاكم.",
+   s:"القانون رقم 742 لسنة 1969 بشأن وقف المواعيد الإجرائية."},
+  {q:"في إسبانيا، أي شهر تُخصَّص له العطلة القضائية؟",
+   o:["يوليو","أغسطس","ديسمبر","يناير"], a:1,
+   e:"شهر واحد من 1 إلى 31 أغسطس، مع استثناءات للعمل القضائي.",
+   s:"المادة (183) من القانون التنظيمي للسلطة القضائية رقم 6/1985."},
+  {q:"كم يوماً تمتد العطلة القضائية الصيفية في البرتغال؟",
+   o:["31 يوماً","38 يوماً","47 يوماً","60 يوماً"], a:2,
+   e:"47 يوماً، من 16 يوليو حتى 31 أغسطس.",
+   s:"المادة (28) من قانون تنظيم النظام القضائي رقم 62/2013."},
+  {q:"أي دولة لم تعد لديها عطلة صيفية تقليدية لمحكمتها العليا منذ 6 نوفمبر 2024؟",
+   o:["سنغافورة","باكستان","الهند","اليونان"], a:2,
+   e:"الهند، وأصبحت الفترة تسمى «أيام العمل الجزئي للمحكمة»، ومجموع العطلات لا يتجاوز 95 يوماً عدا أيام الأحد.",
+   s:"قواعد المحكمة العليا لسنة 2013، المعدلة بقواعد المحكمة العليا (التعديل الثاني) لسنة 2024."},
+  {q:"أي دولة لا يوجد فيها نظام موحد للعطلة القضائية، وتختلف بحسب كل محكمة؟",
+   o:["المكسيك","الولايات المتحدة","بيرو","أوروغواي"], a:1,
+   e:"الولايات المتحدة، إذ تتحدد فترات التوقف وفق قواعد كل محكمة فيدرالية أو محكمة ولاية. وكذلك كندا بحسب كل مقاطعة.",
+   s:"جدول المقارنة: أمريكا الشمالية والوسطى."}
+];
+
+const $ = id => document.getElementById(id);
+const KEYS = ["أ","ب","ج","د"];
+const RM = matchMedia("(prefers-reduced-motion: reduce)").matches;
+let qs = [], i = 0, pick = null, checked = false, log = [], t0 = 0;
+
+const shuffle = a => { a = a.slice(); for (let k = a.length - 1; k > 0; k--) { const j = Math.floor(Math.random() * (k + 1)); [a[k], a[j]] = [a[j], a[k]]; } return a; };
+const prep = q => { if (q.fixed) return {...q}; const idx = shuffle(q.o.map((_, k) => k)); return {...q, o: idx.map(k => q.o[k]), a: idx.indexOf(q.a)}; };
+
+function view(id){ ["start","quiz","result"].forEach(s => $(s).hidden = s !== id); $("count").hidden = $("bar").hidden = id !== "quiz"; window.scrollTo(0, 0); }
+
+function start(list){
+  qs = list.map(prep); i = 0; log = []; t0 = Date.now();
+  $("qt").textContent = qs.length; view("quiz"); show();
+}
+
+function show(){
+  const q = qs[i]; pick = null; checked = false;
+  $("qn").textContent = i + 1;
+  $("barFill").style.transform = `scaleX(${i / qs.length})`;
+  $("qText").textContent = q.q;
+  $("opts").innerHTML = q.o.map((t, k) => `<li><button class="opt" role="radio" aria-checked="false" data-k="${k}"><span class="k">${KEYS[k]}</span><span>${t}</span></button></li>`).join("");
+  $("fb").hidden = true;
+  $("next").textContent = "تحقق من الإجابة"; $("next").disabled = true;
+  const box = $("qbox"); box.classList.remove("in"); void box.offsetWidth; box.classList.add("in");
+}
+
+function choose(k){
+  if (checked || k >= qs[i].o.length) return;
+  pick = k;
+  $("opts").querySelectorAll(".opt").forEach(b => b.setAttribute("aria-checked", String(+b.dataset.k === k)));
+  $("next").disabled = false;
+}
+
+function check(){
+  const q = qs[i], ok = pick === q.a; checked = true;
+  log.push({q, pick, ok});
+  $("opts").querySelectorAll(".opt").forEach(b => {
+    const k = +b.dataset.k; b.disabled = true;
+    b.classList.add(k === q.a ? "is-right" : k === pick ? "is-wrong" : "is-dim");
+  });
+  const fb = $("fb");
+  fb.className = "fb in " + (ok ? "right" : "wrong");
+  fb.innerHTML = `<h3>${ok ? "إجابة صحيحة" : "الإجابة الصحيحة: " + q.o[q.a]}</h3>${q.e}<span class="src"><b>السند:</b> ${q.s}</span>`;
+  fb.hidden = false;
+  $("barFill").style.transform = `scaleX(${(i + 1) / qs.length})`;
+  $("next").textContent = i + 1 < qs.length ? "السؤال التالي" : "عرض النتيجة";
+}
+
+function countUp(el, to){
+  if (RM) { el.textContent = to + "%"; return; }
+  const t = performance.now(), d = 900;
+  const f = n => { const p = Math.min(1, (n - t) / d); el.textContent = Math.round(to * (1 - Math.pow(1 - p, 3))) + "%"; if (p < 1) requestAnimationFrame(f); };
+  requestAnimationFrame(f);
+}
+
+function finish(){
+  view("result");
+  const ok = log.filter(x => x.ok).length, n = log.length, p = Math.round(ok / n * 100), sec = Math.round((Date.now() - t0) / 1000);
+  $("sOk").textContent = ok; $("sBad").textContent = n - ok;
+  $("sTime").textContent = Math.floor(sec / 60) + ":" + String(sec % 60).padStart(2, "0");
+  countUp($("pct"), p);
+  $("arc").style.strokeDashoffset = 345.6;
+  requestAnimationFrame(() => requestAnimationFrame(() => $("arc").style.strokeDashoffset = 345.6 * (1 - ok / n)));
+  const L = p >= 90 ? ["ممتاز", "معرفة دقيقة بالأنظمة المقارنة."]
+          : p >= 70 ? ["جيد جداً", "أساس قوي، مع مراجعة بسيطة لبعض الدول."]
+          : p >= 50 ? ["جيد", "راجع الأسئلة الخاطئة ثم أعد المحاولة."]
+          :           ["يحتاج مراجعة", "ابدأ بالأخطاء فقط، ثم أعد الاختبار كاملاً."];
+  $("level").textContent = L[0]; $("levelMsg").textContent = L[1];
+  $("review").innerHTML = log.map(x => `<li class="${x.ok ? "right" : "wrong"}"><span class="s">${x.ok ? "✓" : "✕"}</span><div>${x.q.q}<small>الإجابة الصحيحة: ${x.q.o[x.q.a]}</small></div></li>`).join("");
+  $("wrongOnly").disabled = ok === n;
+}
+
+$("mQ").textContent = BANK.length;
+$("go").onclick = () => start(BANK);
+$("next").onclick = () => { if (!checked) { if (pick !== null) check(); return; } if (i + 1 < qs.length) { i++; show(); window.scrollTo({top: 0}); } else finish(); };
+$("again").onclick = () => start(BANK);
+$("wrongOnly").onclick = () => start(log.filter(x => !x.ok).map(x => BANK.find(b => b.q === x.q.q)));
+$("opts").addEventListener("click", e => { const b = e.target.closest(".opt"); if (b) choose(+b.dataset.k); });
+document.addEventListener("keydown", e => {
+  if ($("quiz").hidden) return;
+  const n = "1234".indexOf(e.key); if (n > -1 && !checked) { choose(n); return; }
+  if (e.key === "Enter") { e.preventDefault(); $("next").click(); }
+});
+</script>
+</body>
+</html>
