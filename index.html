@@ -22,14 +22,6 @@
     --r:14px; --ease:cubic-bezier(.2,.7,.2,1);
     direction:rtl;
   }
-  @media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){
-    --bg:#111a17; --bg-2:#1f2b27; --card:#17221e; --line:#2a3833;
-    --ink:#e7ece9; --ink-2:#b3beb9; --ink-3:#86928d;
-    --brand:#1f3c33; --brand-ink:#eef0ea; --brand-soft:#a9bbb1;
-    --gold:#c9a25d; --gold-ink:#1a1408;
-    --right:#9fd0b4; --right-bg:#18302a; --right-line:#2f5446;
-    --wrong:#e2a585; --wrong-bg:#33231b; --wrong-line:#5a3d2e;
-    color-scheme:dark; } }
   :root[data-theme="dark"]{
     --bg:#111a17; --bg-2:#1f2b27; --card:#17221e; --line:#2a3833;
     --ink:#e7ece9; --ink-2:#b3beb9; --ink-3:#86928d;
@@ -50,6 +42,9 @@
   .top{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;min-height:28px}
   .name{font-size:13px;color:var(--ink-2)}
   .name b{color:var(--ink)}
+  .tools{display:flex;align-items:center;gap:12px}
+  .theme{border:1px solid var(--line);background:var(--card);color:var(--ink-2);border-radius:20px;padding:5px 12px;font-size:12.5px;line-height:1.4;transition:border-color .15s}
+  .theme:hover{border-color:var(--ink-3)}
   .count{font-size:13px;color:var(--ink-3);font-variant-numeric:tabular-nums}
   .count b{color:var(--ink)}
   .bar{height:5px;background:var(--bg-2);border-radius:5px;overflow:hidden;margin-bottom:22px}
@@ -129,7 +124,10 @@
 <main class="app">
   <div class="top">
     <span class="name"><b>اختبار</b> المعرفة القانونية</span>
-    <span class="count" id="count" hidden>سؤال <b id="qn">1</b> من <b id="qt">10</b></span>
+    <span class="tools">
+      <span class="count" id="count" hidden>سؤال <b id="qn">1</b> من <b id="qt">10</b></span>
+      <button class="theme" id="theme" type="button" aria-label="تبديل المظهر">الوضع الداكن</button>
+    </span>
   </div>
   <div class="bar" id="bar" hidden><span id="barFill"></span></div>
 
@@ -295,6 +293,15 @@ function finish(){
   $("wrongOnly").disabled = ok === n;
 }
 
+// light by default; the button switches themes and the choice is remembered on this device
+function setTheme(t){
+  document.documentElement.setAttribute("data-theme", t);
+  $("theme").textContent = t === "dark" ? "الوضع الفاتح" : "الوضع الداكن";
+  try { localStorage.setItem("quiz-theme", t); } catch (e) {}
+}
+let saved = "light"; try { saved = localStorage.getItem("quiz-theme") || "light"; } catch (e) {}
+setTheme(saved);
+$("theme").onclick = () => setTheme(document.documentElement.getAttribute("data-theme") === "dark" ? "light" : "dark");
 $("mQ").textContent = BANK.length;
 $("go").onclick = () => start(BANK);
 $("next").onclick = () => { if (!checked) { if (pick !== null) check(); return; } if (i + 1 < qs.length) { i++; show(); window.scrollTo({top: 0}); } else finish(); };
